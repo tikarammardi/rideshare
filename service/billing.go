@@ -2,27 +2,25 @@ package service
 
 import (
 	"fmt"
+	. "github.com/tikarammardi/rideshare/utils"
 	"math"
 )
 
 func (rs *RideShareService) CalculateBill(distance float64, time int) float64 {
-	baseFare := 50.0
-	perKmCharge := 6.5
-	perMinuteCharge := 2.0
-	serviceTax := 0.20
-	fare := baseFare + (distance * perKmCharge) + float64(time)*perMinuteCharge
-	fare += fare * serviceTax
+
+	fare := BaseFare + (distance * PerKmCharge) + float64(time)*PerMinuteCharge
+	fare += fare * ServiceTax
 	return fare
 }
 
 func (rs *RideShareService) Bill(rideID string) {
 	ride, exists := rs.Rides[rideID]
 	if !exists {
-		fmt.Println("INVALID_RIDE")
+		fmt.Println(InvalidRide)
 		return
 	}
 	if !ride.Completed {
-		fmt.Println("RIDE_NOT_COMPLETED")
+		fmt.Println(RideNotCompleted)
 		return
 	}
 	rider := rs.Riders[ride.RiderID]

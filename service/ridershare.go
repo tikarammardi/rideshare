@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/tikarammardi/rideshare/models"
+	. "github.com/tikarammardi/rideshare/utils"
 	"math"
 	"sort"
 	"strings"
@@ -63,27 +64,27 @@ func (rs *RideShareService) Match(riderID string) {
 	rs.MatchedDrivers[riderID] = matchedDriverIDs
 
 	if len(availableDrivers) == 0 {
-		fmt.Println("NO_DRIVERS_AVAILABLE")
+		fmt.Println(NoDriversAvailable)
 	} else {
-		fmt.Println("DRIVERS_MATCHED", strings.Join(matchedDriverIDs, " "))
+		fmt.Println(DriversMatched, strings.Join(matchedDriverIDs, " "))
 	}
 }
 
 func (rs *RideShareService) StartRide(rideID, riderID string, n int) {
 	if _, exists := rs.Rides[rideID]; exists {
-		fmt.Println("INVALID_RIDE")
+		fmt.Println(InvalidRide)
 		return
 	}
 
 	if n-1 >= len(rs.MatchedDrivers[riderID]) {
-		fmt.Println("INVALID_RIDE")
+		fmt.Println(InvalidRide)
 		return
 	}
 
 	driverID := rs.MatchedDrivers[riderID][n-1]
 	driver, _ := rs.Drivers[driverID]
 	if !driver.Available {
-		fmt.Println("INVALID_RIDE")
+		fmt.Println(InvalidRide)
 		return
 	}
 
@@ -96,13 +97,13 @@ func (rs *RideShareService) StartRide(rideID, riderID string, n int) {
 		DriverID: driverID,
 		Started:  true,
 	}
-	fmt.Println("RIDE_STARTED", rideID)
+	fmt.Println(RideStarted, rideID)
 }
 
 func (rs *RideShareService) StopRide(rideID string, x, y float64, time int) {
 	ride, exists := rs.Rides[rideID]
 	if !exists || !ride.Started || ride.Completed {
-		fmt.Println("INVALID_RIDE")
+		fmt.Println(InvalidRide)
 		return
 	}
 
@@ -112,7 +113,7 @@ func (rs *RideShareService) StopRide(rideID string, x, y float64, time int) {
 	ride.TimeTaken = time
 	rs.Rides[rideID] = ride
 
-	fmt.Println("RIDE_STOPPED", rideID)
+	fmt.Println(RideStopped, rideID)
 }
 
 func (rs *RideShareService) EuclideanDistance(x1, y1, x2, y2 float64) float64 {
